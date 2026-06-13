@@ -1,0 +1,772 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Airline Review Topics</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172033;
+      --muted: #5d687a;
+      --line: #dbe3ef;
+      --panel: #ffffff;
+      --soft: #f5f7fb;
+      --blue: #2267b8;
+      --teal: #0f8b8d;
+      --gold: #c88719;
+      --red: #b64a4a;
+      --shadow: 0 18px 50px rgba(23, 32, 51, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        linear-gradient(180deg, rgba(34, 103, 184, 0.08), rgba(15, 139, 141, 0.04) 34%, #ffffff 72%),
+        #ffffff;
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.45;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .shell {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 48px;
+    }
+
+    header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 24px;
+      align-items: end;
+      padding: 18px 0 20px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 780px;
+      font-size: clamp(32px, 5vw, 58px);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+
+    .kicker {
+      margin: 0 0 10px;
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .subtitle {
+      max-width: 720px;
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 96px);
+      gap: 10px;
+    }
+
+    .metric {
+      min-height: 86px;
+      padding: 14px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.74);
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 28px;
+      line-height: 1;
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) auto auto;
+      gap: 12px;
+      align-items: center;
+      margin: 22px 0;
+    }
+
+    .search {
+      width: 100%;
+      min-height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 0 14px;
+      background: #ffffff;
+      color: var(--ink);
+      outline: none;
+    }
+
+    .search:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(34, 103, 184, 0.14);
+    }
+
+    .segmented {
+      display: inline-flex;
+      min-height: 44px;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft);
+    }
+
+    .segmented button,
+    .nav-button {
+      min-width: 44px;
+      border: 0;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .segmented button {
+      padding: 0 14px;
+    }
+
+    .segmented button[aria-pressed="true"] {
+      background: #ffffff;
+      color: var(--ink);
+      box-shadow: 0 1px 5px rgba(23, 32, 51, 0.12);
+    }
+
+    .nav-controls {
+      display: inline-flex;
+      min-height: 44px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .nav-button {
+      border-radius: 0;
+      font-size: 22px;
+      line-height: 1;
+    }
+
+    .nav-button + .nav-button {
+      border-left: 1px solid var(--line);
+    }
+
+    .slide-stage {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 280px;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .slide {
+      min-height: 530px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .slide-top {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 18px;
+      padding: 28px;
+      background:
+        linear-gradient(135deg, rgba(34, 103, 184, 0.11), rgba(15, 139, 141, 0.08)),
+        #ffffff;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .topic-number {
+      display: grid;
+      place-items: center;
+      width: 76px;
+      height: 76px;
+      border-radius: 8px;
+      background: var(--ink);
+      color: #ffffff;
+      font-size: 34px;
+      font-weight: 700;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 46px);
+      line-height: 1.04;
+      letter-spacing: 0;
+    }
+
+    .description {
+      margin: 16px 0 0;
+      max-width: 840px;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .slide-body {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.95fr);
+      gap: 24px;
+      padding: 28px;
+    }
+
+    .section-title {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .terms {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .term {
+      padding: 7px 10px;
+      border: 1px solid rgba(34, 103, 184, 0.22);
+      border-radius: 8px;
+      background: rgba(34, 103, 184, 0.07);
+      color: #184d8b;
+      font-size: 13px;
+    }
+
+    blockquote {
+      position: relative;
+      margin: 0;
+      padding: 24px;
+      border-left: 4px solid var(--teal);
+      border-radius: 8px;
+      background: #f7fbfb;
+      color: #273244;
+      font-size: 17px;
+    }
+
+    blockquote::before {
+      content: "\201c";
+      position: absolute;
+      top: -8px;
+      left: 13px;
+      color: rgba(15, 139, 141, 0.2);
+      font-size: 72px;
+      line-height: 1;
+    }
+
+    .side-panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      overflow: hidden;
+    }
+
+    .topic-list {
+      display: grid;
+      gap: 0;
+      max-height: 530px;
+      overflow: auto;
+    }
+
+    .topic-tab {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr);
+      gap: 10px;
+      width: 100%;
+      padding: 13px 14px;
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      background: #ffffff;
+      color: var(--ink);
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .topic-tab[aria-current="true"] {
+      background: #eef6ff;
+    }
+
+    .topic-tab b {
+      display: grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: var(--soft);
+      color: var(--blue);
+      font-size: 13px;
+    }
+
+    .topic-tab[aria-current="true"] b {
+      background: var(--blue);
+      color: #ffffff;
+    }
+
+    .topic-tab span {
+      overflow: hidden;
+      font-size: 14px;
+      font-weight: 700;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .table-view {
+      margin-top: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      box-shadow: 0 10px 30px rgba(23, 32, 51, 0.08);
+      overflow: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 920px;
+    }
+
+    th,
+    td {
+      padding: 14px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: #172033;
+      color: #ffffff;
+      font-size: 13px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    td {
+      color: #273244;
+      font-size: 14px;
+    }
+
+    td:first-child {
+      width: 74px;
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    footer {
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 900px) {
+      header,
+      .toolbar,
+      .slide-stage,
+      .slide-body {
+        grid-template-columns: 1fr;
+      }
+
+      .metrics {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .slide {
+        min-height: auto;
+      }
+
+      .slide-top {
+        grid-template-columns: 1fr;
+      }
+
+      .topic-number {
+        width: 62px;
+        height: 62px;
+        font-size: 28px;
+      }
+
+      .side-panel {
+        order: -1;
+      }
+
+      .topic-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        max-height: none;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .shell {
+        width: min(100% - 20px, 1180px);
+        padding-top: 14px;
+      }
+
+      .metrics {
+        grid-template-columns: 1fr;
+      }
+
+      .segmented,
+      .nav-controls {
+        width: 100%;
+      }
+
+      .segmented button,
+      .nav-button {
+        flex: 1;
+      }
+
+      .slide-top,
+      .slide-body {
+        padding: 20px;
+      }
+
+      blockquote {
+        padding: 20px;
+      }
+
+      .topic-list {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <div>
+        <p class="kicker">Excel presentation</p>
+        <h1>Airline Review Topics</h1>
+        <p class="subtitle">Interactive presentation generated from the Excel table. Explore each topic, scan the strongest terms, and compare all rows in one public GitHub Pages view.</p>
+      </div>
+      <div class="metrics" aria-label="Dataset summary">
+        <div class="metric"><strong id="topicCount">0</strong><span>topics</span></div>
+        <div class="metric"><strong>4</strong><span>columns</span></div>
+        <div class="metric"><strong id="termCount">0</strong><span>terms</span></div>
+      </div>
+    </header>
+
+    <section class="toolbar" aria-label="Presentation controls">
+      <input id="search" class="search" type="search" placeholder="Search labels, terms, descriptions, or excerpts" aria-label="Search the table">
+      <div class="segmented" aria-label="View mode">
+        <button id="slidesMode" type="button" aria-pressed="true">Slides</button>
+        <button id="tableMode" type="button" aria-pressed="false">Table</button>
+      </div>
+      <div class="nav-controls" aria-label="Slide navigation">
+        <button id="prev" class="nav-button" type="button" aria-label="Previous topic">&lsaquo;</button>
+        <button id="next" class="nav-button" type="button" aria-label="Next topic">&rsaquo;</button>
+      </div>
+    </section>
+
+    <section id="slidesView" class="slide-stage">
+      <article class="slide" aria-live="polite">
+        <div class="slide-top">
+          <div>
+            <p class="kicker" id="slideKicker">Topic</p>
+            <h2 id="slideTitle"></h2>
+            <p class="description" id="slideDescription"></p>
+          </div>
+          <div class="topic-number" id="slideNumber"></div>
+        </div>
+        <div class="slide-body">
+          <section>
+            <p class="section-title">Top-most relevant terms</p>
+            <div class="terms" id="slideTerms"></div>
+          </section>
+          <section>
+            <p class="section-title">Representative review excerpt</p>
+            <blockquote id="slideQuote"></blockquote>
+          </section>
+        </div>
+      </article>
+
+      <aside class="side-panel" aria-label="Topic navigation">
+        <div class="topic-list" id="topicList"></div>
+      </aside>
+    </section>
+
+    <section id="tableView" class="table-view hidden" aria-label="Complete Excel table">
+      <table>
+        <thead>
+          <tr>
+            <th>Topic</th>
+            <th>Label</th>
+            <th>Top-most relevant terms</th>
+            <th>Representative review excerpt</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </section>
+
+    <footer>
+      Source file: tabla.xlsx. This page is static and can be published directly with GitHub Pages.
+    </footer>
+  </main>
+
+  <script>
+    const topics = [
+      {
+        number: "1",
+        label: "Booking and ticketing service",
+        terms: "Refund, ticket, email, flight, credit, booking, website, change, tickets, days, received, money, months, cancelled, card, pay, online, compensation, cancel, paid, voucher, booked, now, called, sent, book, response, emails, travel and weeks.",
+        excerpt: "Bought the last-minute ticket with my US debit card online via Swiss.com website, received confirmation of booking via email, and confirmed with the bank that the transaction was processed and 12 hours later my mom, the passenger, was turned away at the airport due to the flight having “been deleted”.",
+        description: "Efficiency and reliability of booking and ticketing processes, including payments, cancellations, refunds, and communication with the airline."
+      },
+      {
+        number: "2",
+        label: "Punctuality of departure and arrival",
+        terms: "Flight, delayed, hours, connecting, flew, booked, day, return, airport, flights, time, late, cancelled, due, hour, trip, pm, London, arrived, connection, back, missed, via, layover, home, delay, Sydney, scheduled, Toronto and night.",
+        excerpt: "Instead of departing from Lyon, the flight was cancelled last minute, and we were obliged to buy another ticket from Lyon to Lisbon, including paying for a 1-night stay at a Lisbon Hotel, because we had an 8-month-old baby, and we departed from Lisbon on the following day.",
+        description: "On-time performance of flights, including delays, cancellations, and adherence to scheduled departure and arrival times."
+      },
+      {
+        number: "3",
+        label: "Boarding procedure",
+        terms: "Call, flight, hours, gate, phone, minutes, help, line, waiting, wait, asked, airport, hour, called, time, one, boarding, desk, hold, plane, another, speak, customer, someone, staff, finally, check, agent, back and waited.",
+        excerpt: "I allowed the rest of my family to go through to boarding gates, instructed by the check-in staff (so they knew that 3 passengers were to be boarded), I then asked to pay for my flight change (a later flight to Milan), and the check-in lady declined saying, “Let's see if your family boards the flight?”.",
+        description: "Waiting times, queue management, and assistance provided by staff during the boarding process."
+      },
+      {
+        number: "4",
+        label: "Overall personal experience",
+        terms: "Airlines, airline, fly, air, class, experience, flying, flown, first, recommend, years, service, airways, time, never, best, flights, ever, China, travel, worst, price, economy, budget, good, used, flight, low and Qatar.",
+        excerpt: "For the last few years every time we fly with them, we’re lucky enough to be able to fly Business and in the air, the experience is generally not quite as good as Emirates (an airline I rate very highly), but it’s as acceptable as just about every other airline’s business class.",
+        description: "Overall passenger experience, including satisfaction with the airline and future behavioral intentions, such as willingness to recommend or fly again."
+      },
+      {
+        number: "5",
+        label: "Check-in and baggage handling",
+        terms: "Luggage, check, bag, baggage, bags, airport, boarding, carry, checked, security, kg, gate, hand, plane, terminal, one, weight, arrived, passengers, go, bus, suitcase, pass, priority, counter, lost, immigration, people, pay and allowed.",
+        excerpt: "When I landed at Rome, my suitcase was lost and I never received it until 3rd December, and when I finally collected the suitcase from the airport, the lock on the suitcase was broken, and I also opened the suitcase in front of the airport staff, and all items from the suitcase were all missing, except for my paper notebook.",
+        description: "Efficiency of check-in procedures and baggage handling processes, including check-in, transport, and delivery of luggage."
+      },
+      {
+        number: "6",
+        label: "Customer service and complaint handling",
+        terms: "Customer, service, airline, customers, company, never, money, care, people, worst, ever, experience, lack, airlines, bad, know, terrible, staff, poor, please, make, situation, absolutely, want, rude, fly, avoid, passengers, understand and horrible.",
+        excerpt: "Customer service doesn't exist if anything unexpected happens, like lost luggage, damaged luggage, missed flights due to delays - only standard procedure if anything happens, and they are always the same, sorry we can’t help you this time, hope we will be able to welcome you again, what do they think?!",
+        description: "Quality of customer service and the airline's responsiveness in handling passenger requests, problems, and complaints."
+      },
+      {
+        number: "7",
+        label: "Cabin comfort and in-flight entertainment",
+        terms: "Seats, seat, room, entertainment, leg, economy, comfortable, class, movies, row, space, flight, legroom, business, plane, extra, front, uncomfortable, tv, premium, seating, flat, window, old, screen, aisle, good, aircraft, sleep and sit.",
+        excerpt: "Leather seats, good headphones, a bigger pillow and a nice blanket are part of the offer along with business class food and two restrooms in the PE cabin, one of which is larger than the other to accommodate disabled people, but also used by anyone.",
+        description: "Comfort and space of the seating area, including seat features and legroom, as well as the availability and quality of in-flight entertainment."
+      },
+      {
+        number: "8",
+        label: "Cabin staff service",
+        terms: "Crew, staff, friendly, flight, service, good, cabin, helpful, attendants, great, food, excellent, clean, attentive, professional, nice, efficient, comfortable, polite, pleasant, smooth, time, ground, courteous, plane, really, aircraft, experience, check and board.",
+        excerpt: "Awe, I had an amazing experience, the flight was great, the cabin crew is so well trained and they give the impression that they really care, I wanna say a big thanks to the very cute girl with short brown (black) hair, she was really nice and confident in her role, she took good care of me all the flight!",
+        description: "Quality of service provided by cabin staff, including their attitude, professionalism, courtesy, and attention to passengers."
+      },
+      {
+        number: "9",
+        label: "Food and beverages",
+        terms: "Food, meal, water, served, drinks, meals, drink, breakfast, snacks, flight, coffee, wine, snack, free, good, offered, dinner, hot, eat, chicken, tea, vegetarian, menu, bottle, sandwich, serve, service, choice, ordered and glass.",
+        excerpt: "The flight was a short haul one (about two-and-a-half hours) and during the flight a hot snack (small meal) and (soft and alcoholic) drinks were served free of charge (e.g., meals, coca-cola, sprite, wine, coffee, drinks, etc.).",
+        description: "Availability, quality, and variety of food and beverages offered during the flight."
+      }
+    ];
+
+    const state = {
+      index: 0,
+      filtered: topics,
+      mode: "slides"
+    };
+
+    const els = {
+      search: document.querySelector("#search"),
+      slidesMode: document.querySelector("#slidesMode"),
+      tableMode: document.querySelector("#tableMode"),
+      slidesView: document.querySelector("#slidesView"),
+      tableView: document.querySelector("#tableView"),
+      prev: document.querySelector("#prev"),
+      next: document.querySelector("#next"),
+      topicCount: document.querySelector("#topicCount"),
+      termCount: document.querySelector("#termCount"),
+      slideKicker: document.querySelector("#slideKicker"),
+      slideTitle: document.querySelector("#slideTitle"),
+      slideDescription: document.querySelector("#slideDescription"),
+      slideNumber: document.querySelector("#slideNumber"),
+      slideTerms: document.querySelector("#slideTerms"),
+      slideQuote: document.querySelector("#slideQuote"),
+      topicList: document.querySelector("#topicList"),
+      tableBody: document.querySelector("#tableBody")
+    };
+
+    function termList(topic) {
+      return topic.terms
+        .replace(/\.$/, "")
+        .split(",")
+        .map((term) => term.trim().replace(/^and\s+/i, ""))
+        .filter(Boolean);
+    }
+
+    function cleanLabel(label) {
+      return label.replace(/:\s*$/, "");
+    }
+
+    function matches(topic, query) {
+      const haystack = [
+        topic.number,
+        topic.label,
+        topic.terms,
+        topic.excerpt,
+        topic.description
+      ].join(" ").toLowerCase();
+      return haystack.includes(query.toLowerCase());
+    }
+
+    function setMode(mode) {
+      state.mode = mode;
+      const showSlides = mode === "slides";
+      els.slidesView.classList.toggle("hidden", !showSlides);
+      els.tableView.classList.toggle("hidden", showSlides);
+      els.slidesMode.setAttribute("aria-pressed", String(showSlides));
+      els.tableMode.setAttribute("aria-pressed", String(!showSlides));
+      render();
+    }
+
+    function setIndex(index) {
+      if (!state.filtered.length) {
+        state.index = 0;
+        render();
+        return;
+      }
+      state.index = (index + state.filtered.length) % state.filtered.length;
+      render();
+    }
+
+    function renderSlide() {
+      if (!state.filtered.length) {
+        els.slideKicker.textContent = "No results";
+        els.slideTitle.textContent = "No matching topic";
+        els.slideDescription.textContent = "Try another search term.";
+        els.slideNumber.textContent = "-";
+        els.slideTerms.innerHTML = "";
+        els.slideQuote.textContent = "";
+        return;
+      }
+
+      const topic = state.filtered[state.index];
+      els.slideKicker.textContent = `Topic ${topic.number} of ${topics.length}`;
+      els.slideTitle.textContent = cleanLabel(topic.label);
+      els.slideDescription.textContent = topic.description;
+      els.slideNumber.textContent = topic.number;
+      els.slideQuote.textContent = topic.excerpt;
+      els.slideTerms.innerHTML = termList(topic)
+        .slice(0, 30)
+        .map((term) => `<span class="term">${term}</span>`)
+        .join("");
+    }
+
+    function renderList() {
+      els.topicList.innerHTML = state.filtered.map((topic, index) => `
+        <button class="topic-tab" type="button" data-index="${index}" aria-current="${index === state.index}">
+          <b>${topic.number}</b>
+          <span title="${cleanLabel(topic.label)}">${cleanLabel(topic.label)}</span>
+        </button>
+      `).join("");
+    }
+
+    function renderTable() {
+      els.tableBody.innerHTML = state.filtered.map((topic) => `
+        <tr>
+          <td>${topic.number}</td>
+          <td>${cleanLabel(topic.label)}</td>
+          <td>${topic.terms}</td>
+          <td>${topic.excerpt}</td>
+          <td>${topic.description}</td>
+        </tr>
+      `).join("");
+    }
+
+    function renderMetrics() {
+      els.topicCount.textContent = topics.length;
+      els.termCount.textContent = topics.reduce((total, topic) => total + termList(topic).length, 0);
+    }
+
+    function render() {
+      if (state.index >= state.filtered.length) {
+        state.index = 0;
+      }
+      renderMetrics();
+      renderSlide();
+      renderList();
+      renderTable();
+    }
+
+    els.search.addEventListener("input", (event) => {
+      const query = event.target.value.trim();
+      state.filtered = query ? topics.filter((topic) => matches(topic, query)) : topics;
+      state.index = 0;
+      render();
+    });
+
+    els.slidesMode.addEventListener("click", () => setMode("slides"));
+    els.tableMode.addEventListener("click", () => setMode("table"));
+    els.prev.addEventListener("click", () => setIndex(state.index - 1));
+    els.next.addEventListener("click", () => setIndex(state.index + 1));
+
+    els.topicList.addEventListener("click", (event) => {
+      const button = event.target.closest("button[data-index]");
+      if (!button) {
+        return;
+      }
+      setIndex(Number(button.dataset.index));
+      setMode("slides");
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.target === els.search) {
+        return;
+      }
+      if (event.key === "ArrowLeft") {
+        setIndex(state.index - 1);
+      }
+      if (event.key === "ArrowRight") {
+        setIndex(state.index + 1);
+      }
+    });
+
+    render();
+  </script>
+</body>
+</html>
